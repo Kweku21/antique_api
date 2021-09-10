@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -40,7 +39,7 @@ class ProductBidView(APIView):
 
         # trigger auto biding bot
         auto_bid_bot = AutoBidBot(product=product, amount=product_bid.amount)
-        auto_bid_bot.make_product_bid()x
+        auto_bid_bot.make_product_bid()
 
         serializer = ProductBidSerializer(product_bid)
 

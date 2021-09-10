@@ -1,10 +1,10 @@
-from django.http import JsonResponse
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.models import User
+from users.models import User, UserBidConfig
+from users.serializers import UserBidConfigSerializer
+from users.validators import add_user_bid_config
 
 default_users = [
     User(name="Emmanuel Debrah", email="debrah@gmail.com"),
@@ -20,3 +20,16 @@ class LoginView(APIView):
     def post(self, request):
         return Response(default_users[0].__dict__, status=status.HTTP_200_OK)
 
+
+class UserAutoBidConfigView(APIView):
+    """
+    View to configure auto-bid
+    """
+    @add_user_bid_config
+    def post(self, request):
+        data = request.data
+
+        user_auto_bid_config = UserBidConfig.objects.create(user=data.get('user'), max_bid_amount=data.get('amount'))
+        serializer = UserBidConfigSerializer(user_auto_bid_config)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

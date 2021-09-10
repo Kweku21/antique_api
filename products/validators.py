@@ -12,8 +12,9 @@ def add_product_bid_validator(func):
     def wrapper(self, request, *args, **kwargs):
         data = request.data
 
-        if data is None:
-            return Response("All data is required,Enter Name of category", status=status.HTTP_404_NOT_FOUND)
+        if len(data) == 0:
+            return Response("All data is required to add a bid. Choose product and enter amount to continue",
+                            status=status.HTTP_404_NOT_FOUND)
         elif data.get('user') is None:
             return Response("You are not authenticated to make a bid", status=status.HTTP_400_BAD_REQUEST)
         elif data.get('product') is None:
@@ -31,8 +32,7 @@ def add_product_bid_validator(func):
         if validate_highest_bid.get('status'):
             return Response(validate_highest_bid.get('message'), status=status.HTTP_400_BAD_REQUEST)
 
-        result = func(self, request, *args, **kwargs)
-        return result
+        return func(self, request, *args, **kwargs)
     return wrapper
 
 

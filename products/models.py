@@ -27,8 +27,8 @@ class ProductImage(models.Model):
     def __repr__(self):
         return dict(image=self.image.url)
 
-    # def __str__(self):
-    #     return self.image.url
+    def __str__(self):
+        return self.image.url
 
 
 class ProductBiding(models.Model):
