@@ -17,7 +17,7 @@ class LoginView(APIView):
     Login API View
     Dummy login logic
     """
-    def post(self, request):
+    def post(self, request) -> Response:
         return Response(default_users[0].__dict__, status=status.HTTP_200_OK)
 
 
@@ -26,10 +26,10 @@ class UserAutoBidConfigView(APIView):
     View to configure auto-bid
     """
     @add_user_bid_config
-    def post(self, request):
+    def post(self, request) -> Response:
         data = request.data
 
         user_auto_bid_config = UserBidConfig.objects.create(user=data.get('user'), max_bid_amount=data.get('amount'))
-        serializer = UserBidConfigSerializer(user_auto_bid_config)
+        # serializer = UserBidConfigSerializer(user_auto_bid_config)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"message": "Successfully configured auto-build"}, status=status.HTTP_201_CREATED)

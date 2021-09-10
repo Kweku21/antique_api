@@ -27,6 +27,9 @@ class UserBidConfig(models.Model):
     max_bid_amount = models.FloatField()
     created_at = models.DateTimeField(default=timezone.now)
 
+    def __repr__(self):
+        return dict(user=self.user, max_bid_amount=float(self.max_bid_amount))
+
 
 class UserAutoBidProduct(models.Model):
     """

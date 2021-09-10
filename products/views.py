@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from products.auto_bid_bot import AutoBidBot
 from products.models import Product, ProductBiding
@@ -39,7 +39,7 @@ class ProductBidView(APIView):
 
         # trigger auto biding bot
         auto_bid_bot = AutoBidBot(product=product, amount=product_bid.amount)
-        auto_bid_bot.make_product_bid()
+        auto_bid_bot.start_bot()
 
         serializer = ProductBidSerializer(product_bid)
 

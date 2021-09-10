@@ -1,7 +1,6 @@
-from threading import Lock
+from threading import Lock, Thread
 
 from django.db.models import F
-
 from products.models import Product, ProductBiding
 from products.validators import validate_highest_user
 from users.models import UserAutoBidProduct, UserBidConfig
@@ -25,10 +24,10 @@ class AutoBidBot:
         lock = Lock()
         with lock:
             if user_bid_config.max_bid_amount > 0 and (user_bid_config.max_bid_amount - self.amount + 1) > 0:
-                UserBidConfig.objects.filter(user=user).update(amount=F('views') - (self.amount + 1))
+                UserBidConfig.objects.filter(user=user).update(max_bid_amount=F('max_bid_amount') - (self.amount + 1))
+                return True
+            else:
                 return False
-
-        return True
 
     def make_product_bid(self) -> None:
         for user in self.get_users():
@@ -37,4 +36,8 @@ class AutoBidBot:
 
             if validate_highest_bid.get('status') is False:
                 ProductBiding.objects.create(user=user, amount=self.amount + 1, product=self.product)
+
+    def start_bot(self) -> None:
+        thread = Thread(target=self.make_product_bid, daemon=True)
+        thread.start()
 

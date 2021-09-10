@@ -5,4 +5,4 @@ from users.models import UserBidConfig
 class UserBidConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBidConfig
-        fields = '__all__'
+        fields = ['user', 'max_bid_amount']
