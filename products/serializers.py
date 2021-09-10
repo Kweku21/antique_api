@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from products.models import Product, ProductImage
+from products.models import Product, ProductImage, ProductBiding
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -24,11 +24,22 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['name', 'created_at', 'product_images']
 
 
+class ProductBidSerializer(serializers.ModelSerializer):
+    product = serializers.StringRelatedField()
+
+    class Meta:
+        model = ProductBiding
+        fields = ['user', 'amount', 'product']
+
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     product_images = ProductImageSerializer(many=True)
-    product_biding = serializers.StringRelatedField(many=True)
+    product_biding = ProductBidSerializer(many=True)
 
     class Meta:
         model = Product
         fields = ['name', 'content', 'auction_date', 'product_biding',
                   'product_images', 'close_bid_date', 'created_at']
+
+
+
