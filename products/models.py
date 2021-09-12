@@ -8,9 +8,13 @@ class Product(models.Model):
     """
     name = models.CharField(max_length=100)
     content = models.TextField()
+    price = models.FloatField(default=0.0)
     auction_date = models.DateTimeField()
     close_bid_date = models.DateTimeField()
     created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.name

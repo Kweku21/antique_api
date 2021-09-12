@@ -7,12 +7,18 @@ from products.auto_bid_bot import AutoBidBot
 from products.models import Product, ProductBiding
 from products.serializers import ProductSerializer, ProductDetailSerializer, ProductBidSerializer
 from products.validators import add_product_bid_validator
+from rest_framework import filters
+
+from users.models import UserAutoBidProduct
 
 
 class ProductView(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
+    filter_backends = [filters.SearchFilter,filters.OrderingFilter]
+    search_fields = ('name', 'content')
     lookup_field = 'pk'
+    ordering_fields = ['created_at', 'price']
 
     def retrieve(self, request, *args, **kwargs):
         product_id = self.kwargs['pk']
@@ -41,7 +47,12 @@ class ProductBidView(APIView):
         auto_bid_bot = AutoBidBot(product=product, amount=product_bid.amount)
         auto_bid_bot.start_bot()
 
+        # Add product to auto-bid product
+        if data.get('auto_bid') is not None or data.get('auto_bid') != '':
+            user_product_auto_bid = UserAutoBidProduct.objects.filter(user=data.get('user'), product=product).first()
+            if user_product_auto_bid is None:
+                UserAutoBidProduct.objects.create(user=data.get('user'), product=product)
+
         serializer = ProductBidSerializer(product_bid)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-

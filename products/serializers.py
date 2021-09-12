@@ -21,7 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['name', 'created_at', 'product_images']
+        fields = ['id', 'name', 'created_at', 'product_images', 'price']
 
 
 class ProductBidSerializer(serializers.ModelSerializer):
@@ -38,8 +38,5 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['name', 'content', 'auction_date', 'product_biding',
+        fields = ['id', 'name', 'content', 'auction_date', 'price', 'product_biding',
                   'product_images', 'close_bid_date', 'created_at']
-
-
-
