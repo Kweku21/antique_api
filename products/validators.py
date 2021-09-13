@@ -38,12 +38,18 @@ def add_product_bid_validator(func):
 
 def validate_highest_user(user: User, product: Product, amount: float) -> dict:
 
-    highest_product_bid = ProductBiding.objects.filter(product=product).order_by('amount').first()
+    if product.price > amount:
+        return dict(message="Your bid amount is smaller than product price", status=True)
+
+    highest_product_bid = ProductBiding.objects.filter(product=product).order_by('-amount').first()
     if highest_product_bid is None:
         return dict(status=False)
 
     if highest_product_bid.user == user:
         return dict(message="Your recent bid for this product is still the highest", status=True)
+
+    elif highest_product_bid.amount >= amount:
+        return dict(message="Your bid amount is smaller than the highest bid", status=True)
 
     last_user_bid = ProductBiding.objects.filter(product=product, user=user).last()
 

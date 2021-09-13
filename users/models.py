@@ -36,5 +36,5 @@ class UserAutoBidProduct(models.Model):
     Model for tracking all product which are configured to auto-bid by a user
     """
     user = models.JSONField()
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, unique=False)
     created_at = models.DateTimeField(default=timezone.now)

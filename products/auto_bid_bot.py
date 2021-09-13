@@ -7,17 +7,17 @@ from users.models import UserAutoBidProduct, UserBidConfig
 
 
 class AutoBidBot:
+    """
+    Getting all users who have activated auto-bid for a product
+    """
 
     def __init__(self, product: Product, amount: float):
         self.product = product
         self.amount = amount
 
-    """
-    Getting all users who have activated auto-bid for a product
-    """
-    def get_users(self) -> list:
-        users_auto_bid_products = [user.user for user in UserAutoBidProduct.objects.filter(product=self.product).all()]
-        return [user for user in users_auto_bid_products if self.get_user_with_enough_max_amount(user)]
+    def get_users(self):
+        users_auto_bid_products = (user.user for user in UserAutoBidProduct.objects.filter(product=self.product).all())
+        return (user for user in users_auto_bid_products if self.get_user_with_enough_max_amount(user))
 
     def get_user_with_enough_max_amount(self, user) -> bool:
         user_bid_config = UserBidConfig.objects.filter(user=user).first()
@@ -29,10 +29,10 @@ class AutoBidBot:
             else:
                 return False
 
-    def make_product_bid(self) -> None:
+    def make_product_bid(self):
         for user in self.get_users():
             validate_highest_bid = validate_highest_user(user=user, product=self.product,
-                                                         amount=self.amount+1)
+                                                         amount=self.amount + 1)
 
             if validate_highest_bid.get('status') is False:
                 ProductBiding.objects.create(user=user, amount=self.amount + 1, product=self.product)
@@ -40,4 +40,3 @@ class AutoBidBot:
     def start_bot(self) -> None:
         thread = Thread(target=self.make_product_bid, daemon=True)
         thread.start()
-

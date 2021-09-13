@@ -30,7 +30,7 @@ class AutoBidBotTest(APITestCase):
         cls.bid_bot = AutoBidBot(product=cls.product, amount=cls.amount)
 
     def test_get_users(self):
-        self.assertEquals(self.bid_bot.get_users(), [self.user.__dict__])
+        self.assertEquals(list(self.bid_bot.get_users()), [self.user.__dict__])
 
     def test_make_product_bid(self):
         self.bid_bot.make_product_bid()

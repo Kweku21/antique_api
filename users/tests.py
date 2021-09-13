@@ -4,6 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from users.models import User, UserBidConfig
+from users.serializers import UserBidConfigSerializer
 
 
 class UserLoginTest(APITestCase):
@@ -19,13 +20,13 @@ class UserLoginTest(APITestCase):
         cls.user = cls.users[0]
 
         # User Auto-Config Setup
-        # cls.user_auto_bid_config = UserBidConfig.objects.create(user=cls.users[1].__dict__, max_bid_amount=1000)
+        cls.user_auto_bid_config = UserBidConfig.objects.create(user=cls.users[0].__dict__, max_bid_amount=1000)
 
     def test_login(self):
         response = self.client.post(reverse('login'), {})
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
-        self.assertEquals(self.user.__dict__, response.data)
+        self.assertEquals({'user':self.user.__dict__,'bid_config':UserBidConfigSerializer(self.user_auto_bid_config).data}, response.data)
 
     def test_add_auto_bid_config(self):
 

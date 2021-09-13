@@ -48,7 +48,7 @@ class ProductBidView(APIView):
         auto_bid_bot.start_bot()
 
         # Add product to auto-bid product
-        if data.get('auto_bid') is not None or data.get('auto_bid') != '':
+        if data.get('auto_bid') is not None and data.get('auto_bid') != '':
             user_product_auto_bid = UserAutoBidProduct.objects.filter(user=data.get('user'), product=product).first()
             if user_product_auto_bid is None:
                 UserAutoBidProduct.objects.create(user=data.get('user'), product=product)

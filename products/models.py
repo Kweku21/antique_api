@@ -44,5 +44,8 @@ class ProductBiding(models.Model):
     amount = models.FloatField()
     created_at = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __repr__(self):
         return dict(amount=self.amount, user=self.user, product=self.product)
